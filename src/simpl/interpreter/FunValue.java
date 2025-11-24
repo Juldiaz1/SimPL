@@ -22,6 +22,13 @@ public class FunValue extends Value {
     @Override
     public boolean equals(Object other) {
         // TODO
+if (this == other) {
+            return true;
+        }
+        // In SimPL, two function values are never considered equal
+        if (!(other instanceof FunValue)) {
+            return false;
+        }
         return false;
     }
 }
