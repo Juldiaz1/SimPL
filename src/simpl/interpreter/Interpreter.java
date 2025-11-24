@@ -8,7 +8,7 @@ import simpl.parser.SyntaxError;
 import simpl.parser.ast.Expr;
 import simpl.typing.DefaultTypeEnv;
 import simpl.typing.TypeError;
-import simpl.typing.TypeResult;  // ADD THIS IMPORT
+import simpl.typing.TypeResult;
 
 public class Interpreter {
 
@@ -18,7 +18,6 @@ public class Interpreter {
             java_cup.runtime.Symbol parseTree = parser.parse();
             Expr program = (Expr) parseTree.value;
             
-            // FIXED: Added TypeResult import and null check
             TypeResult typeResult = program.typecheck(new DefaultTypeEnv());
             if (typeResult != null) {
                 System.out.println(typeResult.t);
@@ -61,7 +60,5 @@ public class Interpreter {
         interpret("doc/examples/pcf.minus.spl");
         interpret("doc/examples/pcf.factorial.spl");
         interpret("doc/examples/pcf.fibonacci.spl");
-        // interpret("doc/examples/pcf.twice.spl");
-        // interpret("doc/examples/pcf.lists.spl");
     }
 }
