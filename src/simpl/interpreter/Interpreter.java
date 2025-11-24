@@ -18,7 +18,7 @@ public class Interpreter {
             java_cup.runtime.Symbol parseTree = parser.parse();
             Expr program = (Expr) parseTree.value;
             
-            // FIXED: Added TypeResult import and null check    
+            // FIXED: Added TypeResult import and null check
             TypeResult typeResult = program.typecheck(new DefaultTypeEnv());
             if (typeResult != null) {
                 System.out.println(typeResult.t);
