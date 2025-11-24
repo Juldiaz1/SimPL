@@ -8,6 +8,7 @@ import simpl.parser.SyntaxError;
 import simpl.parser.ast.Expr;
 import simpl.typing.DefaultTypeEnv;
 import simpl.typing.TypeError;
+import simpl.typing.TypeResult;  // ADD THIS IMPORT
 
 public class Interpreter {
 
@@ -16,7 +17,15 @@ public class Interpreter {
             Parser parser = new Parser(inp);
             java_cup.runtime.Symbol parseTree = parser.parse();
             Expr program = (Expr) parseTree.value;
-            System.out.println(program.typecheck(new DefaultTypeEnv()).t);
+            
+            // FIXED: Added TypeResult import and null check    
+            TypeResult typeResult = program.typecheck(new DefaultTypeEnv());
+            if (typeResult != null) {
+                System.out.println(typeResult.t);
+            } else {
+                System.out.println("type check returned null");
+            }
+            
             System.out.println(program.eval(new InitialState()));
         }
         catch (SyntaxError e) {
