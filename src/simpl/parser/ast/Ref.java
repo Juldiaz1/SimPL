@@ -32,11 +32,10 @@ public class Ref extends UnaryExpr {
         // TODO
         Value v = e.eval(s);
 
-        
-        int loc = ((Int) s.p).get(); 
+        int loc = s.p.get(); // Get current pointer
+        s.M.put(loc, v); // Store value at location
+        s.p.set(loc + 1); // INCREMENT THE POINTER! This was missing
 
-       
-        s.M.put(loc, v);
         return new RefValue(loc);
     }
 }

@@ -30,25 +30,31 @@ public class Rec extends Expr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-       TypeVar t = new TypeVar(true);
+        TypeVar t = new TypeVar(true);
 
-    
         TypeResult tr = e.typecheck(TypeEnv.of(E, x, t));
 
-    
         Substitution s = tr.s.compose(t.unify(tr.t));
 
-    
         return TypeResult.of(s, s.apply(tr.t));
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        RecValue v = new RecValue(s.E, x, e);
-    
-        Env newEnv = new Env(s.E, x, v);
-    
-        return e.eval(State.of(newEnv, s.M, s.p));
+        Value v = s.E.get(x);
+        if (v == null) {
+            throw new RuntimeError("Unbound variable: " + x);
+        }
+
+        
+        if (v instanceof RecValue) {
+            RecValue rv = (RecValue) v;
+            
+            Env recEnv = new Env(rv.E, rv.x, rv);
+            return rv.e.eval(State.of(recEnv, s.M, s.p));
+        }
+
+        return v;
     }
 }

@@ -17,11 +17,14 @@ public final class ListType extends Type {
     @Override
     public Substitution unify(Type t) throws TypeError {
         // TODO
-        if (t instanceof ListType) {
-            ListType listOther = (ListType) t;
-            return t.unify(listOther.t);
+        if (t instanceof TypeVar) {
+            return t.unify(this);
         }
-        throw new TypeMismatchError();
+        if (!(t instanceof ListType)) {
+            throw new TypeMismatchError();
+        }
+        ListType listOther = (ListType) t;
+        return this.t.unify(listOther.t);
     }
 
     @Override
@@ -33,7 +36,7 @@ public final class ListType extends Type {
     @Override
     public Type replace(TypeVar a, Type t) {
         // TODO
-        return new ListType(t.replace(a, t));
+        return new ListType(this.t.replace(a, t));
     }
 
     public String toString() {

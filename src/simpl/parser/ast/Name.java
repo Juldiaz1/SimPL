@@ -41,14 +41,7 @@ public class Name extends Expr {
         if (v == null) {
             throw new RuntimeError("Unbound variable: " + x);
         }
-
-        if (v instanceof RecValue) {
-            RecValue rv = (RecValue) v;
-            return new FunValue(new Env(rv.E, rv.x, rv), rv.x, rv.e);
-        }
-
-    
         return v;
-        
+
     }
 }

@@ -18,13 +18,16 @@ public final class PairType extends Type {
     @Override
     public Substitution unify(Type t) throws TypeError {
         // TODO
-        if (t instanceof PairType) {
-            PairType that = (PairType) t;
-            Substitution s1 = t1.unify(that.t1);
-            Substitution s2 = s1.apply(t2).unify(s1.apply(that.t2));
-            return s2.compose(s1);
+        if (t instanceof TypeVar) {
+            return t.unify(this);
         }
-        throw new TypeMismatchError();
+        if (!(t instanceof PairType)) {
+            throw new TypeMismatchError();
+        }
+        PairType that = (PairType) t;
+        Substitution s1 = this.t1.unify(that.t1);
+        Substitution s2 = s1.apply(this.t2).unify(s1.apply(that.t2));
+        return s2.compose(s1);
     }
 
     @Override

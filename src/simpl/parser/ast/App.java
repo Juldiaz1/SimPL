@@ -30,15 +30,13 @@ public class App extends BinaryExpr {
         // TODO
         TypeResult tr1 = l.typecheck(E);
         TypeResult tr2 = r.typecheck(E);
-        TypeVar t = new TypeVar(true); 
+        TypeVar t = new TypeVar(true);
 
         Substitution s3 = tr2.s.compose(tr1.s);
         Substitution s4 = tr1.t.unify(new ArrowType(tr2.t, t));
 
-    
         Substitution s = s4.compose(s3);
 
-    
         return TypeResult.of(s, s.apply(t));
     }
 
@@ -50,18 +48,18 @@ public class App extends BinaryExpr {
 
         if (lv instanceof FunValue) {
             FunValue f = (FunValue) lv;
-           
             Env newEnv = new Env(f.E, f.x, rv);
             return f.e.eval(State.of(newEnv, s.M, s.p));
         }
 
         if (lv instanceof RecValue) {
-            RecValue rf = (RecValue) lv;
-            Env newEnv = new Env(rf.E, rf.x, rf);
-            newEnv = new Env(newEnv, Symbol.symbol(rf.x.toString()), rv);
-            return rf.e.eval(State.of(newEnv, s.M, s.p));
+            RecValue recVal = (RecValue) lv;
+            // The rec value already has itself bound in its environment
+            // Just bind the argument
+            Env newEnv = new Env(recVal.E, recVal.x, rv);
+            return recVal.e.eval(State.of(newEnv, s.M, s.p));
         }
 
-        throw new RuntimeError("Application expects a function");
+        throw new RuntimeException("Application expects a function");
     }
 }

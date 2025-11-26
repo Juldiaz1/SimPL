@@ -8,29 +8,45 @@ public class DefaultTypeEnv extends TypeEnv {
 
     public DefaultTypeEnv() {
         // TODO
-   
-        TypeVar t1 = new TypeVar(true);
-        TypeVar t2 = new TypeVar(true);
-        TypeVar t = new TypeVar(true);
-
-        // Build environment chain using anonymous subclasses
-        TypeEnv env = new TypeEnv() {
+        E = new TypeEnv() {
             @Override
             public Type get(Symbol x) {
-                if (x.toString().equals("fst")) 
+                String name = x.toString();
+                
+                // Create fresh type variables for each query to support polymorphism
+                if (name.equals("fst")) {
+                    TypeVar t1 = new TypeVar(true);
+                    TypeVar t2 = new TypeVar(true);
                     return new ArrowType(new PairType(t1, t2), t1);
-                if (x.toString().equals("snd"))
+                }
+                if (name.equals("snd")) {
+                    TypeVar t1 = new TypeVar(true);
+                    TypeVar t2 = new TypeVar(true);
                     return new ArrowType(new PairType(t1, t2), t2);
-                if (x.toString().equals("hd"))
+                }
+                if (name.equals("hd")) {
+                    TypeVar t = new TypeVar(true);
                     return new ArrowType(new ListType(t), t);
-                if (x.toString().equals("tl"))
+                }
+                if (name.equals("tl")) {
+                    TypeVar t = new TypeVar(true);
                     return new ArrowType(new ListType(t), new ListType(t));
+                }
+                
+                // PCF functions
+                if (name.equals("iszero")) {
+                    return new ArrowType(Type.INT, Type.BOOL);
+                }
+                if (name.equals("pred")) {
+                    return new ArrowType(Type.INT, Type.INT);
+                }
+                if (name.equals("succ")) {
+                    return new ArrowType(Type.INT, Type.INT);
+                }
+                
                 return null;
             }
         };
-
-        this.E = env;
-        
     }
 
     @Override
