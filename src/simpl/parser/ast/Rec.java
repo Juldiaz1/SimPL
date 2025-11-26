@@ -42,19 +42,8 @@ public class Rec extends Expr {
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        Value v = s.E.get(x);
-        if (v == null) {
-            throw new RuntimeError("Unbound variable: " + x);
-        }
-
-        
-        if (v instanceof RecValue) {
-            RecValue rv = (RecValue) v;
-            
-            Env recEnv = new Env(rv.E, rv.x, rv);
-            return rv.e.eval(State.of(recEnv, s.M, s.p));
-        }
-
-        return v;
+        RecValue recVal = new RecValue(s.E, x, e);
+        Env newEnv = new Env(s.E, x, recVal);
+        return e.eval(State.of(newEnv, s.M, s.p));
     }
 }

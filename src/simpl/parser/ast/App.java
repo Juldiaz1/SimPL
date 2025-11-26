@@ -44,6 +44,14 @@ public class App extends BinaryExpr {
     public Value eval(State s) throws RuntimeError {
         // TODO
         Value lv = l.eval(s);
+
+        
+        if (lv instanceof RecValue) {
+            RecValue recVal = (RecValue) lv;
+            Env newEnv = new Env(recVal.E, recVal.x, recVal);
+            lv = recVal.e.eval(State.of(newEnv, s.M, s.p));
+        }
+
         Value rv = r.eval(s);
 
         if (lv instanceof FunValue) {
@@ -52,14 +60,6 @@ public class App extends BinaryExpr {
             return f.e.eval(State.of(newEnv, s.M, s.p));
         }
 
-        if (lv instanceof RecValue) {
-            RecValue recVal = (RecValue) lv;
-            // The rec value already has itself bound in its environment
-            // Just bind the argument
-            Env newEnv = new Env(recVal.E, recVal.x, rv);
-            return recVal.e.eval(State.of(newEnv, s.M, s.p));
-        }
-
-        throw new RuntimeException("Application expects a function");
+        throw new RuntimeError("Application expects a function");
     }
 }
