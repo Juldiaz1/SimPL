@@ -15,6 +15,16 @@ public abstract class RelExpr extends BinaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+       TypeResult tr1 = l.typecheck(E);
+        TypeResult tr2 = r.typecheck(E);  // no E.apply(tr1.s) — just reuse E
+
+        // Both operands must be integers
+        Substitution s = tr1.s
+            .compose(tr2.s)
+            .compose(tr1.t.unify(Type.INT))
+            .compose(tr2.t.unify(Type.INT));
+
+        // The result of any relational expression is boolean
+        return TypeResult.of(s, Type.BOOL);
     }
 }

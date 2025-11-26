@@ -23,12 +23,21 @@ public class Neg extends UnaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr = e.typecheck(E);
+        Substitution s = tr.s.compose(tr.t.unify(Type.INT));
+        return TypeResult.of(s, Type.INT);
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        Value v = e.eval(s);
+
+        if (!(v instanceof IntValue)) {
+            throw new RuntimeError("Operand of '~' must be an integer");
+        }
+
+        int n = ((IntValue) v).n;
+        return new IntValue(-n);
     }
 }

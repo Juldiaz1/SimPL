@@ -18,6 +18,15 @@ public class Add extends ArithExpr {
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        Value lv = l.eval(s);
+        Value rv = r.eval(s);
+
+        
+        if (!(lv instanceof IntValue) || !(rv instanceof IntValue)) {
+            throw new RuntimeError("Addition expects integer operands");
+        }
+
+        int sum = ((IntValue) lv).n + ((IntValue) rv).n;
+        return new IntValue(sum);
     }
 }

@@ -25,12 +25,24 @@ public class Deref extends UnaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr = e.typecheck(E);
+        TypeVar t = new TypeVar(true);
+
+        Substitution s = tr.s.compose(tr.t.unify(new RefType(t)));
+
+        return TypeResult.of(s, s.apply(t));
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+         Value v = e.eval(s);
+
+        if (!(v instanceof RefValue)) {
+            throw new RuntimeError("Attempting to dereference a non-reference value");
+        }
+
+        RefValue ref = (RefValue) v;
+        return s.M.get(ref.p);
     }
 }

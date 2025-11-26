@@ -18,6 +18,9 @@ public class RecValue extends Value {
     @Override
     public boolean equals(Object other) {
         // TODO
+       if (this == other) {
+            return true;
+        }
         return false;
     }
 }

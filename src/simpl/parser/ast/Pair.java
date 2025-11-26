@@ -22,12 +22,18 @@ public class Pair extends BinaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr1 = l.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.apply(E));
+
+        return TypeResult.of(tr2.s.compose(tr1.s), new PairType(tr1.t, tr2.t));
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        Value v1 = l.eval(s);
+        Value v2 = r.eval(s);
+
+        return new PairValue(v1, v2);
     }
 }

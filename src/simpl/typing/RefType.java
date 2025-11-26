@@ -17,19 +17,23 @@ public final class RefType extends Type {
     @Override
     public Substitution unify(Type t) throws TypeError {
         // TODO
-        return null;
+        if (t instanceof RefType) {
+            RefType that = (RefType) t;
+            return t.unify(that.t);
+        }
+        throw new TypeMismatchError();
     }
 
     @Override
     public boolean contains(TypeVar tv) {
         // TODO
-        return false;
+        return t.contains(tv);
     }
 
     @Override
     public Type replace(TypeVar a, Type t) {
         // TODO
-        return null;
+        return new RefType(t.replace(a, t));
     }
 
     public String toString() {

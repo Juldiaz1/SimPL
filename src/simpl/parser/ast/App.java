@@ -2,6 +2,7 @@ package simpl.parser.ast;
 
 import simpl.interpreter.Env;
 import simpl.interpreter.FunValue;
+import simpl.interpreter.RecValue;
 import simpl.interpreter.RuntimeError;
 import simpl.interpreter.State;
 import simpl.interpreter.Value;
@@ -27,12 +28,40 @@ public class App extends BinaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr1 = l.typecheck(E);
+        TypeResult tr2 = r.typecheck(E);
+        TypeVar t = new TypeVar(true); 
+
+        Substitution s3 = tr2.s.compose(tr1.s);
+        Substitution s4 = tr1.t.unify(new ArrowType(tr2.t, t));
+
+    
+        Substitution s = s4.compose(s3);
+
+    
+        return TypeResult.of(s, s.apply(t));
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        Value lv = l.eval(s);
+        Value rv = r.eval(s);
+
+        if (lv instanceof FunValue) {
+            FunValue f = (FunValue) lv;
+           
+            Env newEnv = new Env(f.E, f.x, rv);
+            return f.e.eval(State.of(newEnv, s.M, s.p));
+        }
+
+        if (lv instanceof RecValue) {
+            RecValue rf = (RecValue) lv;
+            Env newEnv = new Env(rf.E, rf.x, rf);
+            newEnv = new Env(newEnv, Symbol.symbol(rf.x.toString()), rv);
+            return rf.e.eval(State.of(newEnv, s.M, s.p));
+        }
+
+        throw new RuntimeError("Application expects a function");
     }
 }

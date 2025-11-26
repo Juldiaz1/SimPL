@@ -9,6 +9,7 @@ import simpl.typing.Substitution;
 import simpl.typing.TypeEnv;
 import simpl.typing.TypeError;
 import simpl.typing.TypeResult;
+import simpl.typing.TypeVar;
 
 public class Cons extends BinaryExpr {
 
@@ -23,12 +24,23 @@ public class Cons extends BinaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr1 = l.typecheck(E);
+        TypeResult tr2 = r.typecheck(E);
+
+        Substitution s = tr2.s.compose(tr1.s);
+        TypeVar t = new TypeVar(true);
+
+        s = s.compose(tr1.t.unify(t));
+        s = s.compose(tr2.t.unify(new ListType(t)));
+
+        return TypeResult.of(s, new ListType(s.apply(t)));
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        Value v1 = l.eval(s);
+        Value v2 = r.eval(s);
+        return new ConsValue(v1, v2);
     }
 }

@@ -23,12 +23,21 @@ public class Not extends UnaryExpr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr = e.typecheck(E);
+        Substitution s = tr.s.compose(tr.t.unify(Type.BOOL));
+        return TypeResult.of(s, Type.BOOL);
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        Value v = e.eval(s);
+
+        if (!(v instanceof BoolValue)) {
+            throw new RuntimeError("Operand of 'not' must be boolean");
+        }
+
+        boolean b = ((BoolValue) v).b;
+        return new BoolValue(!b);
     }
 }

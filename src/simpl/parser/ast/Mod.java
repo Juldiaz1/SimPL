@@ -18,6 +18,20 @@ public class Mod extends ArithExpr {
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+         Value lv = l.eval(s);
+        Value rv = r.eval(s);
+
+        if (!(lv instanceof IntValue) || !(rv instanceof IntValue)) {
+            throw new RuntimeError("Operands of '%' must be integers");
+        }
+
+        int left = ((IntValue) lv).n;
+        int right = ((IntValue) rv).n;
+
+        if (right == 0) {
+            throw new RuntimeError("Modulo by zero");
+        }
+
+        return new IntValue(left % right);
     }
 }

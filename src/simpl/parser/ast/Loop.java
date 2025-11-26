@@ -26,12 +26,33 @@ public class Loop extends Expr {
     @Override
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
-        return null;
+        TypeResult tr1 = e1.typecheck(E);
+        TypeResult tr2 = e2.typecheck(E);
+
+        Substitution s = tr2.s.compose(tr1.s);
+        s = s.compose(tr1.t.unify(Type.BOOL));
+        s = s.compose(tr2.t.unify(Type.UNIT));
+
+        return TypeResult.of(s, Type.UNIT);
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-        return null;
+        while (true) {
+            Value cond = e1.eval(s);
+
+            if (!(cond instanceof BoolValue)) {
+                throw new RuntimeError("Condition in while loop must be boolean");
+            }
+
+            if (!((BoolValue) cond).b) {
+                break; // exit loop
+            }
+
+            e2.eval(s);
+        }
+
+        return Value.UNIT;
     }
 }
