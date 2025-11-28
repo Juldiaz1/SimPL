@@ -35,7 +35,10 @@ public class Cond extends Expr {
         s = s.compose(s.apply(tr1.t).unify(Type.BOOL));
         s = s.compose(s.apply(tr2.t).unify(s.apply(tr3.t)));
 
-        return TypeResult.of(s, s.apply(tr2.t));
+        // FIXED: Apply s AGAIN to ensure full resolution
+        Type resultType = s.apply(s.apply(tr2.t));
+
+        return TypeResult.of(s, resultType);
     }
 
     @Override

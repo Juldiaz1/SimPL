@@ -34,7 +34,17 @@ public class Fn extends Expr {
         TypeResult tr = e.typecheck(TypeEnv.of(E, x, t1));
 
         Substitution s = tr.s;
-        return TypeResult.of(s, new ArrowType(s.apply(t1), s.apply(tr.t)));
+
+        Type paramType = s.apply(t1);
+        Type bodyType = s.apply(tr.t);
+
+        paramType = s.apply(paramType);
+        bodyType = s.apply(bodyType);
+
+        Type arrowType = new ArrowType(paramType, bodyType);
+
+        return TypeResult.of(s, s.apply(arrowType));
+
     }
 
     @Override
