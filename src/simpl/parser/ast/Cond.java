@@ -28,12 +28,12 @@ public class Cond extends Expr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = e1.typecheck(E);
-        TypeResult tr2 = e2.typecheck(E);
-        TypeResult tr3 = e3.typecheck(E);
+        TypeResult tr2 = e2.typecheck(tr1.s.compose(E));
+        TypeResult tr3 = e3.typecheck(tr2.s.compose(tr1.s.compose(E)));
 
         Substitution s = tr3.s.compose(tr2.s).compose(tr1.s);
-        s = s.compose(tr1.t.unify(Type.BOOL));
-        s = s.compose(tr2.t.unify(tr3.t));
+        s = s.compose(s.apply(tr1.t).unify(Type.BOOL));
+        s = s.compose(s.apply(tr2.t).unify(s.apply(tr3.t)));
 
         return TypeResult.of(s, s.apply(tr2.t));
     }
@@ -50,7 +50,8 @@ public class Cond extends Expr {
         BoolValue cond = (BoolValue) v1;
         if (cond.b) {
             return e2.eval(s);
-        } else {
+        }
+        else {
             return e3.eval(s);
         }
     }

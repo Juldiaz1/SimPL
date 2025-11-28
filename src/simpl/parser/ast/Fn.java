@@ -6,6 +6,7 @@ import simpl.interpreter.State;
 import simpl.interpreter.Value;
 import simpl.parser.Symbol;
 import simpl.typing.ArrowType;
+import simpl.typing.Substitution;
 import simpl.typing.Type;
 import simpl.typing.TypeEnv;
 import simpl.typing.TypeError;
@@ -32,7 +33,8 @@ public class Fn extends Expr {
         TypeVar t1 = new TypeVar(true);
         TypeResult tr = e.typecheck(TypeEnv.of(E, x, t1));
 
-        return TypeResult.of(tr.s, new ArrowType(tr.s.apply(t1), tr.s.apply(tr.t)));
+        Substitution s = tr.s;
+        return TypeResult.of(s, new ArrowType(s.apply(t1), s.apply(tr.t)));
     }
 
     @Override

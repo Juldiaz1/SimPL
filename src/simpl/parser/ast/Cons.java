@@ -25,13 +25,13 @@ public class Cons extends BinaryExpr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = l.typecheck(E);
-        TypeResult tr2 = r.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.compose(E));
 
         Substitution s = tr2.s.compose(tr1.s);
         TypeVar t = new TypeVar(true);
 
-        s = s.compose(tr1.t.unify(t));
-        s = s.compose(tr2.t.unify(new ListType(t)));
+        s = s.compose(s.apply(tr1.t).unify(t));
+        s = s.compose(s.apply(tr2.t).unify(new ListType(s.apply(t))));
 
         return TypeResult.of(s, new ListType(s.apply(t)));
     }

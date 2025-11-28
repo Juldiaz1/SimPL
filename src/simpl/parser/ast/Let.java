@@ -29,8 +29,8 @@ public class Let extends Expr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = e1.typecheck(E);
-        TypeEnv E2 = TypeEnv.of(E, x, tr1.t); 
-        TypeResult tr2 = e2.typecheck(E2);    
+        TypeEnv E2 = TypeEnv.of(tr1.s.compose(E), x, tr1.s.apply(tr1.t));
+        TypeResult tr2 = e2.typecheck(E2);
 
         Substitution s = tr2.s.compose(tr1.s);
         return TypeResult.of(s, s.apply(tr2.t));

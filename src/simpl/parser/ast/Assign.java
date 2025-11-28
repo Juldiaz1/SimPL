@@ -26,13 +26,13 @@ public class Assign extends BinaryExpr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = l.typecheck(E);
-        TypeResult tr2 = r.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.compose(E));
 
         Substitution s = tr2.s.compose(tr1.s);
 
-        TypeVar t = new simpl.typing.TypeVar(true);
-        s = s.compose(tr1.t.unify(new RefType(t)));
-        s = s.compose(tr2.t.unify(t));
+        TypeVar t = new TypeVar(true);
+        s = s.compose(s.apply(tr1.t).unify(new RefType(t)));
+        s = s.compose(s.apply(tr2.t).unify(s.apply(t)));
 
         return TypeResult.of(s, Type.UNIT);
     }
@@ -48,7 +48,7 @@ public class Assign extends BinaryExpr {
         }
 
         RefValue ref = (RefValue) lv;
-        s.M.put(ref.p, rv); 
-        return simpl.interpreter.Value.UNIT; 
+        s.M.put(ref.p, rv);
+        return simpl.interpreter.Value.UNIT;
     }
 }

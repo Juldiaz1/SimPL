@@ -28,7 +28,7 @@ public class Deref extends UnaryExpr {
         TypeResult tr = e.typecheck(E);
         TypeVar t = new TypeVar(true);
 
-        Substitution s = tr.s.compose(tr.t.unify(new RefType(t)));
+        Substitution s = tr.s.compose(tr.s.apply(tr.t).unify(new RefType(t)));
 
         return TypeResult.of(s, s.apply(t));
     }
@@ -36,7 +36,7 @@ public class Deref extends UnaryExpr {
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-         Value v = e.eval(s);
+        Value v = e.eval(s);
 
         if (!(v instanceof RefValue)) {
             throw new RuntimeError("Attempting to dereference a non-reference value");

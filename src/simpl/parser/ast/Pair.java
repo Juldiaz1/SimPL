@@ -5,6 +5,7 @@ import simpl.interpreter.RuntimeError;
 import simpl.interpreter.State;
 import simpl.interpreter.Value;
 import simpl.typing.PairType;
+import simpl.typing.Substitution;
 import simpl.typing.TypeEnv;
 import simpl.typing.TypeError;
 import simpl.typing.TypeResult;
@@ -25,7 +26,8 @@ public class Pair extends BinaryExpr {
         TypeResult tr1 = l.typecheck(E);
         TypeResult tr2 = r.typecheck(tr1.s.compose(E));
 
-        return TypeResult.of(tr2.s.compose(tr1.s), new PairType(tr1.t, tr2.t));
+        Substitution s = tr2.s.compose(tr1.s);
+        return TypeResult.of(s, new PairType(s.apply(tr1.t), s.apply(tr2.t)));
     }
 
     @Override

@@ -22,15 +22,11 @@ public class Seq extends BinaryExpr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = l.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.compose(E));
 
-        
-        TypeResult tr2 = r.typecheck(E);
+        Substitution s = tr2.s.compose(tr1.s);
 
-        
-        Substitution s = tr1.s.compose(tr2.s);
-
-        
-        return TypeResult.of(s, tr2.t);
+        return TypeResult.of(s, s.apply(tr2.t));
     }
 
     @Override
@@ -38,7 +34,6 @@ public class Seq extends BinaryExpr {
         // TODO
         l.eval(s);
 
-        
         return r.eval(s);
     }
 }

@@ -48,6 +48,7 @@ public class Interpreter {
     }
 
     public static void main(String[] args) {
+        interpret(args[0]);
         interpret("doc/examples/plus.spl");
         interpret("doc/examples/factorial.spl");
         interpret("doc/examples/gcd1.spl");

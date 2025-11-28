@@ -20,10 +20,10 @@ public abstract class EqExpr extends BinaryExpr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = l.typecheck(E);
-        TypeResult tr2 = r.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.compose(E));
 
         Substitution s = tr2.s.compose(tr1.s);
-        s = s.compose(tr1.t.unify(tr2.t));
+        s = s.compose(s.apply(tr1.t).unify(s.apply(tr2.t)));
 
         Type t = s.apply(tr1.t);
 

@@ -11,7 +11,13 @@ public class ConsValue extends Value {
 
     public String toString() {
         // TODO
-        return "list@";
+        int length = 1;
+        Value current = v2;
+        while (current instanceof ConsValue) {
+            length++;
+            current = ((ConsValue) current).v2;
+        }
+        return "list@" + length;
     }
 
     @Override

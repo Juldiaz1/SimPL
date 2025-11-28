@@ -29,13 +29,12 @@ public class App extends BinaryExpr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = l.typecheck(E);
-        TypeResult tr2 = r.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.compose(E));
         TypeVar t = new TypeVar(true);
 
-        Substitution s3 = tr2.s.compose(tr1.s);
-        Substitution s4 = tr1.t.unify(new ArrowType(tr2.t, t));
-
-        Substitution s = s4.compose(s3);
+        Substitution s = tr2.s.compose(tr1.s);
+        Substitution s2 = s.apply(tr1.t).unify(new ArrowType(s.apply(tr2.t), t));
+        s = s2.compose(s);
 
         return TypeResult.of(s, s.apply(t));
     }
@@ -45,7 +44,6 @@ public class App extends BinaryExpr {
         // TODO
         Value lv = l.eval(s);
 
-        
         if (lv instanceof RecValue) {
             RecValue recVal = (RecValue) lv;
             Env newEnv = new Env(recVal.E, recVal.x, recVal);

@@ -24,27 +24,24 @@ public class AndAlso extends BinaryExpr {
     public TypeResult typecheck(TypeEnv E) throws TypeError {
         // TODO
         TypeResult tr1 = l.typecheck(E);
-        TypeResult tr2 = r.typecheck(E);
+        TypeResult tr2 = r.typecheck(tr1.s.compose(E));
 
-        
         Substitution s = tr2.s.compose(tr1.s);
-        s = s.compose(tr1.t.unify(Type.BOOL));
-        s = s.compose(tr2.t.unify(Type.BOOL));
+        s = s.compose(s.apply(tr1.t).unify(Type.BOOL));
+        s = s.compose(s.apply(tr2.t).unify(Type.BOOL));
 
-        
         return TypeResult.of(s, Type.BOOL);
     }
 
     @Override
     public Value eval(State s) throws RuntimeError {
         // TODO
-         Value lv = l.eval(s);
+        Value lv = l.eval(s);
         if (!(lv instanceof BoolValue)) {
             throw new RuntimeError("andalso: left operand not a boolean");
         }
         BoolValue left = (BoolValue) lv;
 
-        
         if (!left.b) {
             return new BoolValue(false);
         }
