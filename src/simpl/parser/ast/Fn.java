@@ -38,12 +38,10 @@ public class Fn extends Expr {
         Type paramType = s.apply(t1);
         Type bodyType = s.apply(tr.t);
 
-        paramType = s.apply(paramType);
-        bodyType = s.apply(bodyType);
-
         Type arrowType = new ArrowType(paramType, bodyType);
 
-        return TypeResult.of(s, s.apply(arrowType));
+        return TypeResult.of(s, arrowType);
+        
 
     }
 

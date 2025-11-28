@@ -33,6 +33,7 @@ public class Let extends Expr {
         TypeResult tr2 = e2.typecheck(E2);
 
         Substitution s = tr2.s.compose(tr1.s);
+        
         return TypeResult.of(s, s.apply(tr2.t));
     }
 

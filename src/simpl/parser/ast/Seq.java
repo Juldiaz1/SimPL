@@ -27,6 +27,7 @@ public class Seq extends BinaryExpr {
         Substitution s = tr2.s.compose(tr1.s);
 
         return TypeResult.of(s, s.apply(tr2.t));
+    
     }
 
     @Override
