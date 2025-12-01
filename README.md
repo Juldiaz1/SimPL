@@ -20,17 +20,20 @@ SimPL is a simplified dialect of ML that supports both functional and imperative
 - **Predefined functions**: `fst`, `snd`, `hd`, `tl` for pair and list operations
 
 ## Project Structure
+```
 SimPL/
-├── src/ # Source code
-│ ├── simpl/
-│ │ ├── interpreter/ # Runtime evaluation
-│ │ ├── parser/ # Lexing and parsing
-│ │ ├── typing/ # Type inference system
-│ │ └── parser/ast/ # Abstract syntax tree
-├── lib/ # Dependencies (java-cup)
-├── doc/examples/ # Example SimPL programs
-├── bin/ # Compiled classes
-└── SimPL.jar # Runnable JAR
+├── src/                    # Source code
+│   └── simpl/
+│       ├── interpreter/    # Runtime evaluation
+│       ├── parser/         # Lexing and parsing
+│       │   └── ast/        # Abstract syntax tree
+│       └── typing/         # Type inference system
+├── lib/                    # Dependencies (java-cup)
+├── doc/
+│   └── examples/           # Example SimPL programs
+├── bin/                    # Compiled classes
+└── SimPL.jar               # Runnable JAR
+```
 
 
 ## Building
